@@ -15,8 +15,8 @@ export function PlayerNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="flex h-14 items-center justify-around">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 pb-[env(safe-area-inset-bottom)]">
+      <div className="flex h-14 min-h-[44px] items-center justify-around">
         {tabs.map(({ href, label, icon: Icon }) => {
           const isActive = pathname === href
           return (
@@ -24,7 +24,7 @@ export function PlayerNav() {
               key={href}
               href={href}
               className={cn(
-                "flex flex-col items-center justify-center gap-0.5 px-6 py-2 text-xs font-medium transition-colors",
+                "flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 px-6 py-2 text-xs font-medium transition-colors",
                 isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
               )}
             >

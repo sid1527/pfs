@@ -64,11 +64,15 @@ function LoginForm() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-4">
+    <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center p-4 pt-8">
+      <div className="mb-6 text-center">
+        <h2 className="text-2xl font-bold tracking-tight">Prime Force Spartans</h2>
+        <p className="mt-1 text-sm text-muted-foreground">Team Management</p>
+      </div>
       <Card className="w-full max-w-sm">
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
-          <CardDescription>Sign in to your Sports Team account</CardDescription>
+          <CardTitle className="text-xl font-bold">Welcome back</CardTitle>
+          <CardDescription>Sign in to your account</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <Button

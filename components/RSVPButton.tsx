@@ -38,7 +38,7 @@ export function RSVPButton({
   const supabase = createClient()
 
   const handleIn = async () => {
-    const newStatus: RsvpStatus = confirmedCount >= maxCapacity ? "WAITLISTED" : "CONFIRMED"
+    const newStatus: RsvpStatus = "WAITLISTED"
     const prevStatus = status
     setStatus(newStatus)
     setLoading(true)
@@ -53,11 +53,7 @@ export function RSVPButton({
         { onConflict: "match_id,user_id" }
       )
       if (error) throw error
-      toast.success(
-        newStatus === "CONFIRMED"
-          ? "You're in! See you at the match."
-          : "You're on the waitlist. We'll notify you if a spot opens up."
-      )
+      toast.success("You're on the waitlist. Captain will confirm the squad.")
       onSuccess?.()
     } catch (err) {
       setStatus(prevStatus)
@@ -97,6 +93,7 @@ export function RSVPButton({
       <Button
         size="sm"
         className={cn(
+          "min-h-[44px]",
           "flex-1",
           status === "CONFIRMED" || status === "WAITLISTED"
             ? "bg-green-600 hover:bg-green-700"
@@ -114,7 +111,7 @@ export function RSVPButton({
       <Button
         size="sm"
         variant="outline"
-        className={cn("flex-1", status === "OUT" ? "bg-muted" : "")}
+        className={cn("flex-1 min-h-[44px]", status === "OUT" ? "bg-muted" : "")}
         onClick={handleOut}
         disabled={loading}
       >

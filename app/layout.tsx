@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sports Team Management",
+  title: "Prime Force Spartans",
   description: "Manage your sports team, matches, RSVPs, and dues",
 };
 

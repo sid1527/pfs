@@ -32,6 +32,9 @@ export default function NewMatchPage() {
     e.preventDefault()
     setLoading(true)
     try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error("Not authenticated")
+
       const { data, error } = await supabase
         .from("matches")
         .insert({
@@ -42,12 +45,24 @@ export default function NewMatchPage() {
           venue,
           max_capacity: maxCapacity,
           status: "Upcoming",
+          created_by: user.id,
         })
         .select("id")
         .single()
 
       if (error) throw error
-      toast.success("Match created!")
+
+      await supabase.from("rsvps").upsert(
+        {
+          match_id: data.id,
+          user_id: user.id,
+          status: "CONFIRMED",
+          created_at: new Date().toISOString(),
+        },
+        { onConflict: "match_id,user_id" }
+      )
+
+      toast.success("Match created! You're added as confirmed.")
       router.push(`/admin/matches/${data.id}`)
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Failed to create match")

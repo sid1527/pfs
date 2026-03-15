@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Calendar, MapPin } from "lucide-react"
+import { Calendar, MapPin, CheckCircle2, XCircle, Wallet } from "lucide-react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { RSVPButton } from "@/components/RSVPButton"
@@ -20,14 +20,22 @@ export type Match = {
   user_rsvp?: { status: string } | null
 }
 
+export type PastMatchInfo = {
+  attended?: boolean
+  amountOwed: number
+  isPaid: boolean
+}
+
 export function MatchCard({
   match,
   userId,
   onRsvpChange,
+  pastMatchInfo,
 }: {
   match: Match
   userId: string
   onRsvpChange?: () => void
+  pastMatchInfo?: PastMatchInfo
 }) {
   const spotsLeft = Math.max(0, match.max_capacity - (match.confirmed_count ?? 0))
   const isUpcoming = match.status === "Upcoming"
@@ -62,18 +70,50 @@ export function MatchCard({
         </div>
 
         {isUpcoming && (
-          <RSVPButton
-            matchId={match.id}
-            userId={userId}
-            currentStatus={match.user_rsvp?.status}
-            confirmedCount={match.confirmed_count ?? 0}
-            maxCapacity={match.max_capacity}
-            matchTitle={match.title}
-            onSuccess={onRsvpChange}
-          />
+          <div onClick={(e) => e.stopPropagation()} role="presentation">
+            <RSVPButton
+              matchId={match.id}
+              userId={userId}
+              currentStatus={match.user_rsvp?.status}
+              confirmedCount={match.confirmed_count ?? 0}
+              maxCapacity={match.max_capacity}
+              matchTitle={match.title}
+              onSuccess={onRsvpChange}
+            />
+          </div>
         )}
 
-        {match.status === "Completed" && (
+        {match.status === "Completed" && pastMatchInfo && (
+          <div className="space-y-2 text-sm">
+            {pastMatchInfo.attended !== undefined && (
+              <div className="flex items-center gap-2">
+                {pastMatchInfo.attended ? (
+                  <>
+                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    <span className="text-muted-foreground">Attended</span>
+                  </>
+                ) : (
+                  <>
+                    <XCircle className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-muted-foreground">Did not attend</span>
+                  </>
+                )}
+              </div>
+            )}
+            {pastMatchInfo.amountOwed > 0 && (
+              <div className="flex items-center gap-2">
+                <Wallet className="h-4 w-4" />
+                {pastMatchInfo.isPaid ? (
+                  <span className="text-green-600">Paid</span>
+                ) : (
+                  <span className="text-amber-600">₹{pastMatchInfo.amountOwed} pending</span>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {match.status === "Completed" && !pastMatchInfo && (
           <p className="text-sm text-muted-foreground">Match completed</p>
         )}
       </CardContent>

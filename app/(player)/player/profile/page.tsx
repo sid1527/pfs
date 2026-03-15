@@ -21,6 +21,8 @@ const PLAYER_TYPES = ["Batsman", "Bowler", "All-Rounder", "Wicketkeeper"] as con
 
 export default function PlayerProfilePage() {
   const [fullName, setFullName] = useState("")
+  const [nickname, setNickname] = useState("")
+  const [phone, setPhone] = useState("")
   const [playerType, setPlayerType] = useState<string>("Batsman")
   const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | null>(null)
   const [attendancePercent, setAttendancePercent] = useState<number | null>(null)
@@ -38,12 +40,14 @@ export default function PlayerProfilePage() {
 
     const { data: profile } = await supabase
       .from("users")
-      .select("full_name, player_type, profile_photo_url")
+      .select("full_name, nickname, phone, player_type, profile_photo_url")
       .eq("id", user.id)
       .single()
 
     if (profile) {
       setFullName(profile.full_name ?? "")
+      setNickname(profile.nickname ?? "")
+      setPhone(profile.phone ?? "")
       setPlayerType(profile.player_type ?? "Batsman")
       setProfilePhotoUrl(profile.profile_photo_url)
     }
@@ -133,6 +137,8 @@ export default function PlayerProfilePage() {
         .from("users")
         .update({
           full_name: fullName,
+          nickname: nickname || null,
+          phone: phone || null,
           player_type: playerType,
           updated_at: new Date().toISOString(),
         })
@@ -235,6 +241,27 @@ export default function PlayerProfilePage() {
                 id="fullName"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
+                disabled={saving}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="nickname">Nickname</Label>
+              <Input
+                id="nickname"
+                placeholder="e.g. Sid"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+                disabled={saving}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="e.g. +91 98765 43210"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
                 disabled={saving}
               />
             </div>
