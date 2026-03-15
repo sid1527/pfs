@@ -1,5 +1,19 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Auth Setup (Supabase)
+
+If sign-in or sign-up fails, check:
+
+1. **Supabase Auth > URL Configuration**
+   - **Site URL:** `http://localhost:3000` (or your app URL)
+   - **Redirect URLs:** Add `http://localhost:3000/auth/callback` and `http://localhost:3000/**`
+
+2. **Email confirmation:** For instant sign-up without email verification, go to **Authentication > Providers > Email** and disable "Confirm email".
+
+3. **Auto-create user profile:** Run `supabase/auth-trigger.sql` in the Supabase SQL Editor so new users get a `public.users` row automatically.
+
+4. **Google OAuth:** Enable Google in **Authentication > Providers** and add your OAuth credentials.
+
 ## Getting Started
 
 First, run the development server:
